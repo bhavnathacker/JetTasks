@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">JetTasks</string>
+  <string name="msg_no_tasks">No Tasks yet, click \'+\' to get Started!</string>
+  <string name="add_task">Add Task</string>
+  <string name="completed">Completed</string>
+  <string name="pending">Pending</string>
+  <string name="delete_task">Delete Task</string>
+  <string name="task_priority">Task Priority</string>
+  <string name="save">Save</string>
+  <string name="task_updated">Task Updated</string>
+  <string name="task_added">Task Added</string>
+  <string name="add_task_first">Please add task first!</string>
+  <string name="date_picker">Date Picker</string>
+  <string name="task_deadline">Task Deadline</string>
+  <string name="menu_icon">Menu Icon</string>
+</resources>
