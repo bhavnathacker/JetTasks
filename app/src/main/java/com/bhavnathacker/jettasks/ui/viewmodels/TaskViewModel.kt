@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.UserPreferences.SortOrder
 import com.bhavnathacker.jettasks.data.model.Task
+import com.bhavnathacker.jettasks.data.model.TaskStatus
 import com.bhavnathacker.jettasks.data.repository.TaskRepository
 import com.bhavnathacker.jettasks.data.repository.UserPreferenceRepository
 import com.bhavnathacker.jettasks.ui.model.TasksUiModel
@@ -53,7 +54,7 @@ class TaskViewModel @Inject constructor(
         val filteredTasks = if (showCompleted) {
             tasks
         } else {
-            tasks.filter { !it.completed }
+            tasks.filter { it.status == TaskStatus.PENDING }
         }
         // sort the tasks
         return when (sortOrder) {

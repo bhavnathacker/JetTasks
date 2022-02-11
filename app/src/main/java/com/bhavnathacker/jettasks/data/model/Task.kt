@@ -5,13 +5,25 @@ import androidx.room.PrimaryKey
 import com.bhavnathacker.jettasks.R
 import java.util.*
 
-enum class TaskPriority {
-    HIGH, MEDIUM, LOW;
+enum class TaskPriority(val color: Int) {
+    HIGH( R.color.salmon), MEDIUM(R.color.orange), LOW( R.color.light_green);
 
     companion object {
         fun getList(): List<String> {
             return values().map {
-                it.toString()
+                it.name
+            }
+        }
+    }
+}
+
+enum class TaskStatus(val color: Int) {
+    PENDING(R.color.red), COMPLETED(R.color.green);
+
+    companion object {
+        fun getList(): List<String> {
+            return values().map {
+                it.name
             }
         }
     }
@@ -24,33 +36,5 @@ data class Task(
         var name: String,
         var deadline: Date,
         var priority: TaskPriority,
-        var completed: Boolean = false
-) {
-    val priorityColor: Int
-        get() {
-            return when (priority) {
-                TaskPriority.LOW -> R.color.light_green
-                TaskPriority.MEDIUM -> R.color.orange
-                TaskPriority.HIGH -> R.color.salmon
-            }
-        }
-
-    val statusString: Int
-        get() {
-            return if (completed) {
-                R.string.completed
-            } else {
-                R.string.pending
-            }
-        }
-
-    val statusColor: Int
-        get() {
-            return if (completed) {
-                R.color.green
-            } else {
-                R.color.red
-            }
-        }
-
-}
+        var status: TaskStatus
+)

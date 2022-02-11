@@ -1,6 +1,5 @@
 package com.bhavnathacker.jettasks.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.bhavnathacker.jettasks.R
 import com.bhavnathacker.jettasks.data.model.Task
 import com.bhavnathacker.jettasks.data.model.TaskPriority
+import com.bhavnathacker.jettasks.data.model.TaskStatus
 import com.bhavnathacker.jettasks.ui.components.*
 import com.bhavnathacker.jettasks.util.getDateWithoutTime
 import java.util.*
@@ -31,7 +31,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
     var priorityExpanded by remember { mutableStateOf(false) }
     val defaultPriorityIndex = TaskPriority.values().indexOf(task?.priority)
     var selectedPriorityIndex by remember { mutableStateOf(if(defaultPriorityIndex != -1) defaultPriorityIndex else 0) }
-    var isCompleted by remember { mutableStateOf(task?.completed ?: false) }
+    var status by remember { mutableStateOf(task?.status ?: TaskStatus.PENDING) }
 
     Column {
         TopAppBar(title = {
@@ -83,8 +83,9 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
 
             TaskSwitch(
                 stringResource(id = R.string.completed),
-                isCompleted,
-                onCheckChanged = { isCompleted = it })
+                status == TaskStatus.COMPLETED,
+                onCheckChanged = { isChecked -> status =
+                    if(isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING })
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -103,7 +104,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                             task.name = name
                             task.deadline = selectedDate.getDateWithoutTime()
                             task.priority = TaskPriority.values()[selectedPriorityIndex]
-                            task.completed = isCompleted
+                            task.status = status
                             toastMessage = taskUpdatedMsg
                             onSaveTask(task)
                         } else {
@@ -112,7 +113,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                                 name = name,
                                 deadline = selectedDate.getDateWithoutTime(),
                                 priority = TaskPriority.values()[selectedPriorityIndex],
-                                completed = isCompleted
+                                status = status
                             )
                             toastMessage = taskAddedMsg
                             onSaveTask(newTask)

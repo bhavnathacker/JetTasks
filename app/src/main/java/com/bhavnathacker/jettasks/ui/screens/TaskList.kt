@@ -168,14 +168,14 @@ fun TaskRow(
                     style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Priority ${task.priority}",
+                    text = "Priority ${task.priority.name}",
                     style = MaterialTheme.typography.caption, fontWeight = FontWeight.SemiBold,
-                    color = colorResource(task.priorityColor)
+                    color = colorResource(task.priority.color)
                 )
                 Text(
-                    text = stringResource(task.statusString),
+                    text = task.status.name,
                     style = MaterialTheme.typography.caption,
-                    color = colorResource(task.statusColor)
+                    color = colorResource(task.status.color)
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
