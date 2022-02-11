@@ -1,15 +1,19 @@
 # JetTasks
-A simple two screen todo list app which has **Clean Architecture with MVVM** , UI built with **Jetpack Compose** and includes **Modern Android Development Best Practices** with components as below:
+A sample demo app (two screen todo list app) which has **Clean Architecture with MVVM** , UI built with **Jetpack Compose** and includes **Modern Android Development Best Practices** with components as below:
 
-Jetpack Compose - UI
-(Includes - Text, Button, Dropdown Menu, Date Picker, Toggle Switch, RecyclerView, Constraint Layout and Floating Action Button)
+- Jetpack Compose - UI
+(Includes - Text, Button, Dropdown Menu, Date Picker, Toggle Switch, RecyclerView, ConstraintLayout and Floating Action Button)
+- Kotlin Flow
+- Hilt - Dependency injection
+- Kotlin Coroutines
+- Room with Coroutines & Flow Support
+- Jetpack Datastore - Proto DataStore
+- Jetpack Compose Navigation - With SafeArgs
 
-Kotlin Flow
+This App is inspired by *Working with Proto DataStore* Google Codelabs and includes Local Data Storage support - with Room as well as Proto DataStore.
 
-Hilt - Dependency injection
+- Room - Saves the Tasks created by User
+- Proto DataStore - Saves User Preferences(SortOrder and ShowCompleted flag)
 
-Kotlin Coroutines
 
-Room with Coroutine & Flow Support
 
-Jetpack Compose Navigation - With SafeArgs
