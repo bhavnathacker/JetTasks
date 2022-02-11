@@ -11,5 +11,7 @@
     <color name="orange">#FFFFA500</color>
     <color name="salmon">#FFFA8072</color>
     <color name="red">#FFD2042D</color>
+    <color name="light_green">#FF32CD32</color>
     <color name="green">#FF228B22</color>
+    <color name="light_grey">#F8F8F8</color>
 </resources>

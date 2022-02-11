@@ -6,7 +6,15 @@ import com.bhavnathacker.jettasks.R
 import java.util.*
 
 enum class TaskPriority {
-    LOW, MEDIUM, HIGH
+    HIGH, MEDIUM, LOW;
+
+    companion object {
+        fun getList(): List<String> {
+            return values().map {
+                it.toString()
+            }
+        }
+    }
 }
 
 @Entity(tableName = "task_tbl")
@@ -15,16 +23,15 @@ data class Task(
         val id: Int = 0,
         var name: String,
         var deadline: Date,
-        var priority: String,
+        var priority: TaskPriority,
         var completed: Boolean = false
 ) {
     val priorityColor: Int
         get() {
             return when (priority) {
-                TaskPriority.LOW.name -> R.color.yellow
-                TaskPriority.MEDIUM.name -> R.color.orange
-                TaskPriority.HIGH.name -> R.color.salmon
-                else -> R.color.yellow
+                TaskPriority.LOW -> R.color.light_green
+                TaskPriority.MEDIUM -> R.color.orange
+                TaskPriority.HIGH -> R.color.salmon
             }
         }
 

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-
     @Query("SELECT * from task_tbl ORDER BY id DESC")
     fun getTasks(): Flow<List<Task>>
 
@@ -18,6 +17,4 @@ interface TaskDao {
 
     @Delete
     suspend fun deleteTask(task: Task)
-
-
 }

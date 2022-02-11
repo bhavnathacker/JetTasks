@@ -1,5 +1,6 @@
 package com.bhavnathacker.jettasks.ui.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -16,39 +17,20 @@ import com.bhavnathacker.jettasks.R
 import com.bhavnathacker.jettasks.data.model.Task
 import com.bhavnathacker.jettasks.data.model.TaskPriority
 import com.bhavnathacker.jettasks.ui.components.*
-import com.bhavnathacker.jettasks.ui.viewmodels.TaskViewModel
+import com.bhavnathacker.jettasks.util.getDateWithoutTime
 import java.util.*
 
 @ExperimentalComposeUiApi
 @Composable
-fun TaskDetail(taskViewModel: TaskViewModel, taskId: Int?, onSaveTask: (Task) -> Unit) {
+fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
     val context = LocalContext.current
     val defaultDate = Date(Calendar.getInstance().timeInMillis)
 
-    var task: Task? = null
-    taskId?.let {
-        task = taskViewModel.getTaskById(taskId)
-    }
-
-    var name by remember {
-        mutableStateOf(task?.name ?: "")
-    }
-
-    var selectedDate: Date by remember {
-        mutableStateOf(task?.deadline ?: defaultDate)
-    }
-
-
-    val taskPriorities = listOf(TaskPriority.LOW.name, TaskPriority.MEDIUM.name, TaskPriority.HIGH.name)
-    var taskPriorityExpanded by remember { mutableStateOf(false) }
-
-    val defaultPriorityIndex = if (taskPriorities.indexOf(task?.priority) != -1) {
-        taskPriorities.indexOf(task?.priority)
-    } else {
-        0
-    }
-    var selectedPriorityIndex by remember { mutableStateOf(defaultPriorityIndex) }
-
+    var name by remember { mutableStateOf(task?.name ?: "") }
+    var selectedDate: Date by remember { mutableStateOf(task?.deadline ?: defaultDate) }
+    var priorityExpanded by remember { mutableStateOf(false) }
+    val defaultPriorityIndex = TaskPriority.values().indexOf(task?.priority)
+    var selectedPriorityIndex by remember { mutableStateOf(if(defaultPriorityIndex != -1) defaultPriorityIndex else 0) }
     var isCompleted by remember { mutableStateOf(task?.completed ?: false) }
 
     Column {
@@ -56,48 +38,53 @@ fun TaskDetail(taskViewModel: TaskViewModel, taskId: Int?, onSaveTask: (Task) ->
             Text(text = stringResource(id = R.string.app_name))
         }, backgroundColor = MaterialTheme.colors.primary)
 
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-                horizontalAlignment = Alignment.Start) {
+            horizontalAlignment = Alignment.Start
+        ) {
 
             TaskInputText(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                    text = name,
-                    label = "Add a Task",
-                    onTextChange = { name = it })
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = name,
+                label = stringResource(R.string.label_add_task),
+                onTextChange = { name = it })
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = stringResource(R.string.task_deadline))
-            TaskDatePicker(selectedDate) { timeInMillis ->
-                selectedDate = Date(timeInMillis)
+            TaskDatePicker(selectedDate) { date ->
+                selectedDate = date
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(text = stringResource(R.string.task_priority))
             TaskMenu(
-                    menuItems = taskPriorities,
-                    menuExpandedState = taskPriorityExpanded,
-                    selectedIndex = selectedPriorityIndex,
-                    updateMenuExpandStatus = {
-                        taskPriorityExpanded = true
-                    },
-                    onDismissMenuView = {
-                        taskPriorityExpanded = false
-                    },
-                    onMenuItemClick = { index ->
-                        selectedPriorityIndex = index
-                        taskPriorityExpanded = false
-                    }
+                menuItems = TaskPriority.getList(),
+                menuExpandedState = priorityExpanded,
+                selectedIndex = selectedPriorityIndex,
+                updateMenuExpandStatus = {
+                    priorityExpanded = true
+                },
+                onDismissMenuView = {
+                    priorityExpanded = false
+                },
+                onMenuItemClick = { index ->
+                    selectedPriorityIndex = index
+                    priorityExpanded = false
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TaskSwitch(stringResource(id = R.string.completed), isCompleted, onCheckChanged = { isCompleted = it })
+            TaskSwitch(
+                stringResource(id = R.string.completed),
+                isCompleted,
+                onCheckChanged = { isCompleted = it })
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -106,31 +93,35 @@ fun TaskDetail(taskViewModel: TaskViewModel, taskId: Int?, onSaveTask: (Task) ->
             val addTaskMsg = stringResource(R.string.add_task_first)
 
             TaskButton(text = stringResource(R.string.save), modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 40.dp),
-                    onClick = {
-                        var toastMessage = ""
-                        if (name.isNotEmpty()) {
-                            if (task != null) {
-                                //Update Task
-                                task!!.name = name
-                                task!!.deadline = selectedDate
-                                task!!.priority = taskPriorities[selectedPriorityIndex]
-                                task!!.completed = isCompleted
-                                toastMessage = taskUpdatedMsg
-                            } else {
-                                //Add Task
-                                task = Task(name = name,
-                                        deadline = selectedDate, priority = taskPriorities[selectedPriorityIndex], completed = isCompleted)
-                                toastMessage = taskAddedMsg
-                            }
-                            //Save it in Room
-                            onSaveTask(task!!)
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp),
+                onClick = {
+                    var toastMessage: String
+                    if (name.isNotEmpty()) {
+                        if (task != null) {
+                            //Update Task
+                            task.name = name
+                            task.deadline = selectedDate.getDateWithoutTime()
+                            task.priority = TaskPriority.values()[selectedPriorityIndex]
+                            task.completed = isCompleted
+                            toastMessage = taskUpdatedMsg
+                            onSaveTask(task)
                         } else {
-                            toastMessage = addTaskMsg
+                            //Add Task
+                            val newTask = Task(
+                                name = name,
+                                deadline = selectedDate.getDateWithoutTime(),
+                                priority = TaskPriority.values()[selectedPriorityIndex],
+                                completed = isCompleted
+                            )
+                            toastMessage = taskAddedMsg
+                            onSaveTask(newTask)
                         }
-                        Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                    })
+                    } else {
+                        toastMessage = addTaskMsg
+                    }
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                })
         }
 
     }
