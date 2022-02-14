@@ -1,32 +1,21 @@
 package com.bhavnathacker.jettasks.data.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.UserPreferences.SortOrder
-import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import java.io.IOException
 import javax.inject.Inject
-
-private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
-
-// Build the DataStore
-private val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
-    fileName = DATA_STORE_FILE_NAME,
-    serializer = UserPreferencesSerializer
-)
 
 /**
  * Class that handles saving and retrieving user preferences
  */
-class UserPreferencesRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context): UserPreferenceRepository {
+class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferencesStore: DataStore<UserPreferences>) :
+    UserPreferenceRepository {
 
-    private val TAG: String = "UserPreferencesRepoImpl"
-    private val userPreferencesStore = context.userPreferencesStore
+    private val TAG: String = "UserPrefRepoImpl"
 
     override val userPreferencesFlow: Flow<UserPreferences> = userPreferencesStore.data
         .catch { exception ->
