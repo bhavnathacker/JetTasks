@@ -1,12 +1,10 @@
 package com.bhavnathacker.jettasks.ui.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,10 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +38,7 @@ fun TaskList(
     val tasks = tasksUiModel.tasks
     val showCompleted = tasksUiModel.showCompleted
     val sortOrder = tasksUiModel.sortOrder
+
     val isPrioritySortSelected =
         sortOrder == UserPreferences.SortOrder.BY_PRIORITY || sortOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
     val isDeadlineSortSelected =
@@ -92,50 +87,55 @@ fun TaskList(
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .background(
-                        color = colorResource(id = R.color.light_grey),
-                        shape = RectangleShape
-                    )
-                    .constrainAs(bottomControls) {
-                        bottom.linkTo(parent.bottom)
-                    }, verticalAlignment = Alignment.CenterVertically
-            ) {
+            Surface(modifier = Modifier
+                .padding(top = 16.dp)
+                .constrainAs(bottomControls) {
+                    bottom.linkTo(parent.bottom)
+                }) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(MaterialTheme.colors.secondary.copy(0.25f))) {
 
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(0.dp)
-                        .weight(1f)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = stringResource(R.string.show_completed_tasks))
-                        Switch(
-                            checked = showCompleted,
-                            onCheckedChange = { showCompletedTasks(it) })
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(0.dp)
+                            .weight(1f)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = stringResource(R.string.show_completed_tasks))
+                            Switch(
+                                checked = showCompleted,
+                                onCheckedChange = { showCompletedTasks(it) },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colors.secondary,
+                                    uncheckedThumbColor = MaterialTheme.colors.onBackground.copy(0.5f),
+                                    checkedTrackColor = MaterialTheme.colors.secondary.copy(0.5f),
+                                    uncheckedTrackColor = MaterialTheme.colors.secondary.copy(0.5f)
+                                ),)
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = stringResource(R.string.sort_by))
+                            TaskChip(
+                                name = stringResource(id = R.string.priority),
+                                isSelected = isPrioritySortSelected,
+                                onSelectionChanged = { onSortByPriorityChanged(it)})
+                            TaskChip(
+                                name = stringResource(id = R.string.deadline),
+                                isSelected = isDeadlineSortSelected,
+                                onSelectionChanged = { onSortByDeadlineChanged(it)})
+                        }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = stringResource(R.string.sort_by))
-                        TaskChip(
-                            name = stringResource(id = R.string.priority),
-                            isSelected = isPrioritySortSelected,
-                            onSelectionChanged = { onSortByPriorityChanged(it)})
-                        TaskChip(
-                            name = stringResource(id = R.string.deadline),
-                            isSelected = isDeadlineSortSelected,
-                            onSelectionChanged = { onSortByDeadlineChanged(it)})
+                    FloatingActionButton(
+                        modifier = Modifier
+                            .padding(8.dp), onClick = onAddTask
+                    ) {
+                        Icon(Icons.Filled.Add, stringResource(R.string.add_task))
                     }
                 }
-                FloatingActionButton(
-                    modifier = Modifier
-                        .padding(8.dp), onClick = onAddTask
-                ) {
-                    Icon(Icons.Filled.Add, stringResource(R.string.add_task))
-                }
+
             }
+
+
         }
     }
 }
@@ -148,15 +148,14 @@ fun TaskRow(
     onViewTask: (Task) -> Unit,
     onDeleteTask: (Task) -> Unit
 ) {
-    Surface(
+
+    Card(
         modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clip(RoundedCornerShape(2.dp)),
-        border = BorderStroke(1.dp, color = Color.LightGray),
+            .padding(8.dp),
         elevation = 4.dp
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.background(task.bgColor)) {
             Column(modifier
                 .width(0.dp)
                 .weight(1f)
@@ -165,32 +164,34 @@ fun TaskRow(
                 horizontalAlignment = Alignment.Start) {
                 Text(
                     text = task.name,
-                    style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.h6, fontWeight = FontWeight.Bold,
+                    color = task.contentColor
                 )
                 Text(
                     text = "Priority ${task.priority.name}",
-                    style = MaterialTheme.typography.caption, fontWeight = FontWeight.SemiBold,
-                    color = colorResource(task.priority.color)
+                    style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.SemiBold,
+                    color = task.contentColor
                 )
                 Text(
                     text = task.status.name,
-                    style = MaterialTheme.typography.caption,
-                    color = colorResource(task.status.color)
+                    style = MaterialTheme.typography.subtitle2,
+                    color = task.contentColor
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.DateRange,
+                        imageVector = Icons.Default.DateRange, tint = task.contentColor,
                         contentDescription = stringResource(id = R.string.task_deadline)
                     )
                     Text(
                         text = task.deadline.formatDateToString(),
-                        style = MaterialTheme.typography.caption
+                        style = MaterialTheme.typography.body1,
+                        color = task.contentColor
                     )
                 }
 
             }
 
-            Icon(imageVector = Icons.Default.Delete,
+            Icon(imageVector = Icons.Default.Delete, tint = task.contentColor,
                 contentDescription = stringResource(R.string.delete_task),
                 modifier = Modifier
                     .padding(end = 8.dp)

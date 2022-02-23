@@ -3,8 +3,7 @@ package com.bhavnathacker.jettasks.ui.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,8 +21,7 @@ fun TaskSwitch(text: String, isChecked: Boolean, onCheckChanged: (Boolean) -> Un
 
         val (label, switch) = createRefs()
 
-        Text(
-            text = text,
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(label) {
@@ -32,12 +30,19 @@ fun TaskSwitch(text: String, isChecked: Boolean, onCheckChanged: (Boolean) -> Un
                     start.linkTo(parent.start)
                     end.linkTo(switch.start)
                     width = Dimension.fillToConstraints
-                }
-        )
+                }) {
+            Text(text = text)
+        }
 
         Switch(
             checked = isChecked,
             onCheckedChange = onCheckChanged,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colors.primary,
+                uncheckedThumbColor = MaterialTheme.colors.onBackground.copy(0.5f),
+                checkedTrackColor = MaterialTheme.colors.primary.copy(0.5f),
+                uncheckedTrackColor = MaterialTheme.colors.primary.copy(0.5f)
+            ),
             modifier = Modifier
                 .size(36.dp, 36.dp)
                 .constrainAs(switch) {

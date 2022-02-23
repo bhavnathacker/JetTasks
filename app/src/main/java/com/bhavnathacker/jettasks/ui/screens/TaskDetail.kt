@@ -3,6 +3,7 @@ package com.bhavnathacker.jettasks.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
@@ -29,8 +30,9 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
     var name by remember { mutableStateOf(task?.name ?: "") }
     var selectedDate: Date by remember { mutableStateOf(task?.deadline ?: defaultDate) }
     var priorityExpanded by remember { mutableStateOf(false) }
+
     val defaultPriorityIndex = TaskPriority.values().indexOf(task?.priority)
-    var selectedPriorityIndex by remember { mutableStateOf(if(defaultPriorityIndex != -1) defaultPriorityIndex else 0) }
+    var selectedPriorityIndex by remember { mutableStateOf(if (defaultPriorityIndex != -1) defaultPriorityIndex else 0) }
     var status by remember { mutableStateOf(task?.status ?: TaskStatus.PENDING) }
 
     Column {
@@ -45,47 +47,64 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
             horizontalAlignment = Alignment.Start
         ) {
 
-            TaskInputText(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
-                text = name,
-                label = stringResource(R.string.label_add_task),
-                onTextChange = { name = it })
+                    .padding(top = 8.dp)
+            ) {
+                TaskInputText(
+                    text = name,
+                    label = stringResource(R.string.label_add_task),
+                    onTextChange = { name = it })
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(text = stringResource(R.string.task_deadline))
+            Text(
+                text = stringResource(R.string.task_deadline),
+                color = MaterialTheme.colors.onBackground
+            )
             TaskDatePicker(selectedDate) { date ->
                 selectedDate = date
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(text = stringResource(R.string.task_priority))
-            TaskMenu(
-                menuItems = TaskPriority.getList(),
-                menuExpandedState = priorityExpanded,
-                selectedIndex = selectedPriorityIndex,
-                updateMenuExpandStatus = {
-                    priorityExpanded = true
-                },
-                onDismissMenuView = {
-                    priorityExpanded = false
-                },
-                onMenuItemClick = { index ->
-                    selectedPriorityIndex = index
-                    priorityExpanded = false
-                }
+            Text(
+                text = stringResource(R.string.task_priority),
+                color = MaterialTheme.colors.onBackground
             )
+
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                TaskMenu(
+                    menuItems = TaskPriority.getList(),
+                    menuExpandedState = priorityExpanded,
+                    selectedIndex = selectedPriorityIndex,
+                    updateMenuExpandStatus = {
+                        priorityExpanded = true
+                    },
+                    onDismissMenuView = {
+                        priorityExpanded = false
+                    },
+                    onMenuItemClick = { index ->
+                        selectedPriorityIndex = index
+                        priorityExpanded = false
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             TaskSwitch(
                 stringResource(id = R.string.completed),
                 status == TaskStatus.COMPLETED,
-                onCheckChanged = { isChecked -> status =
-                    if(isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING })
+                onCheckChanged = { isChecked ->
+                    status =
+                        if (isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING
+                })
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -123,6 +142,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                     }
                     Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                 })
+
         }
 
     }
