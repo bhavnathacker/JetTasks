@@ -19,7 +19,7 @@ This App is inspired by *Working with Proto DataStore* Google Codelabs and inclu
 
 |   Task List   |   Task Details
 |---	|---	|---
-|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.gif)  |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.gif)   
+|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.png)  |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.png)   
 
 ## App Tour
 
