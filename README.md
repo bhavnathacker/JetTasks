@@ -15,7 +15,7 @@ This App is inspired by *Working with Proto DataStore* Google Codelabs and inclu
 - Room - Saves the Tasks created by User
 - Proto DataStore - Saves User Preferences(SortOrder and ShowCompleted flag)
 
- ![Alt text](https://github.com/bhavnathacker/JetTasks/blob/master/image.gif)
+ ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/app_tour.gif)
 
 
 
