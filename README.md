@@ -15,13 +15,14 @@ This App is inspired by *Working with Proto DataStore* Google Codelabs and inclu
 - Room - Saves the Tasks created by User
 - Proto DataStore - Saves User Preferences(SortOrder and ShowCompleted flag)
 
+
 ## Light Mode
 
-<div style="width: 60%; height: 60%">
+|   Task List    |   Task Details     
+|---	|---
+|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.png)    |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.png)    
 
-![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.png)  |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.png)
-
-</div>
+<br />
  
 
 ## App Tour
