@@ -50,7 +50,7 @@ This App is inspired by *Working with Proto DataStore* Google Codelabs and inclu
 ## JetTasks Package Structure
 
  ```
-dev.bhavnathacker.jettasks
+com.bhavnathacker.jettasks
 ├── data                  # DATA LAYER
 │   ├── local             # Local Persistence (Room) Database
 │   │   ├── TaskDao          # Data Access Object for Room
