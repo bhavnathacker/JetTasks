@@ -18,19 +18,20 @@ This App is inspired by *Working with Proto DataStore* Google Codelabs and inclu
 
 ## Light Mode
 
-|   Task List    |   Task Details     
-|---	|---
-|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.png)    |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.png)    
+|   Task List    |   Task Details  |   App Tour       
+|---	|--- |---
+|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_list.png)    |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/light_task_detail.png)     |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/app_tour_demo_light.gif)    
 
 <br />
  
 
-## App Tour
-<div style="width: 60%; height: 60%">
+## Dark Mode
 
-![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/app_tour_demo.gif)
+|   Task List    |   Task Details  |   App Tour       
+|---	|--- |---
+|  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/dark_task_list.png)    |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/dark_task_detail.png)     |  ![](https://github.com/bhavnathacker/JetTasks/blob/master/demo/app_tour_demo_dark.gif)    
 
-</div>
+<br />
 
 
 
