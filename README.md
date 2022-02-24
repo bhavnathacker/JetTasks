@@ -9,6 +9,7 @@ A sample demo app (two screen todo list app) which has **Clean Architecture with
 - Room with Coroutines & Flow Support
 - Jetpack Datastore - Proto DataStore
 - Jetpack Compose Navigation - With SafeArgs
+- Jetpack Compose Theming - With Light & Dark Mode Support
 
 This App is inspired by *Working with Proto DataStore* Google Codelabs and includes Local Data Storage support - with Room as well as Proto DataStore.
 
