@@ -76,7 +76,7 @@ com.bhavnathacker.jettasks
 ├── TaskApplication       # Application class
 
 ```
-<br />
+<br/>
 
 ## Architecture
 
@@ -99,6 +99,14 @@ DM me at
 
 * Twitter: <a href="https://twitter.com/bhavnathacker14" target="_blank">@bhavnathacker14</a>
 * Email: bhavnathacker03@gmail.com
+
+<br/>
+
+## Contribute
+
+You are most Welcome to Contribute!
+
+Please see [Contributing Guidelines](https://github.com/bhavnathacker/JetTasks/blob/master/CONTRIBUTING.md).
 
 <br/>
 
