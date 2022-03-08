@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.bhavnathacker.jettasks.R
-import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.data.model.Task
+import com.bhavnathacker.jettasks.data.repository.SortOrder
 import com.bhavnathacker.jettasks.ui.components.TaskChip
 import com.bhavnathacker.jettasks.ui.model.TasksUiModel
 import com.bhavnathacker.jettasks.util.*
@@ -40,9 +40,9 @@ fun TaskList(
     val sortOrder = tasksUiModel.sortOrder
 
     val isPrioritySortSelected =
-        sortOrder == UserPreferences.SortOrder.BY_PRIORITY || sortOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
+        sortOrder == SortOrder.BY_PRIORITY || sortOrder == SortOrder.BY_DEADLINE_AND_PRIORITY
     val isDeadlineSortSelected =
-        sortOrder == UserPreferences.SortOrder.BY_DEADLINE || sortOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
+        sortOrder == SortOrder.BY_DEADLINE || sortOrder == SortOrder.BY_DEADLINE_AND_PRIORITY
 
     Column {
         TopAppBar(title = {

@@ -1,88 +1,94 @@
 package com.bhavnathacker.jettasks.data.repository
 
+import android.content.Context
 import android.util.Log
-import androidx.datastore.core.DataStore
-import com.bhavnathacker.jettasks.UserPreferences
-import com.bhavnathacker.jettasks.UserPreferences.SortOrder
+import androidx.core.content.edit
+
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
 import javax.inject.Inject
 
+private const val USER_PREFERENCES_NAME = "user_preferences"
+private const val SORT_ORDER_KEY = "sort_order"
+
+enum class SortOrder {
+    UNSPECIFIED,
+    NONE,
+    BY_DEADLINE,
+    BY_PRIORITY,
+    BY_DEADLINE_AND_PRIORITY
+}
+
 /**
  * Class that handles saving and retrieving user preferences
  */
-class UserPreferencesRepositoryImpl @Inject constructor(private val userPreferencesStore: DataStore<UserPreferences>) :
+class UserPreferencesRepositoryImpl @Inject constructor(private val context: Context) :
     UserPreferenceRepository {
 
     private val TAG: String = "UserPrefRepoImpl"
 
-    override val userPreferencesFlow: Flow<UserPreferences> = userPreferencesStore.data
-        .catch { exception ->
-            // dataStore.data throws an IOException when an error is encountered when reading data
-            if (exception is IOException) {
-                Log.e(TAG, "Error reading sort order preferences.", exception)
-                emit(UserPreferences.getDefaultInstance())
-            } else {
-                throw exception
-            }
-        }
+    private val sharedPreferences =
+        context.applicationContext.getSharedPreferences(USER_PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+    // Keep the sort order as a stream of changes
+    private val _sortOrderFlow = MutableStateFlow(sortOrder)
+    override val sortOrderFlow: StateFlow<SortOrder> = _sortOrderFlow
 
     /**
-     * Enable / disable sort by deadline.
+     * Get the sort order. By default, sort order is None.
      */
+    private val sortOrder: SortOrder
+        get() {
+            val order = sharedPreferences.getString(SORT_ORDER_KEY, SortOrder.NONE.name)
+            return SortOrder.valueOf(order ?: SortOrder.NONE.name)
+        }
+
     override suspend fun enableSortByDeadline(enable: Boolean) {
-        // updateData handles data transactionally, ensuring that if the sort is updated at the same
-        // time from another thread, we won't have conflicts
-        userPreferencesStore.updateData { currentPreferences ->
-            val currentOrder = currentPreferences.sortOrder
-            val newSortOrder =
-                if (enable) {
-                    if (currentOrder == SortOrder.BY_PRIORITY) {
-                        SortOrder.BY_DEADLINE_AND_PRIORITY
-                    } else {
-                        SortOrder.BY_DEADLINE
-                    }
+        val currentOrder = sortOrderFlow.value
+        val newSortOrder =
+            if (enable) {
+                if (currentOrder == SortOrder.BY_PRIORITY) {
+                    SortOrder.BY_DEADLINE_AND_PRIORITY
                 } else {
-                    if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
-                        SortOrder.BY_PRIORITY
-                    } else {
-                        SortOrder.NONE
-                    }
+                    SortOrder.BY_DEADLINE
                 }
-            currentPreferences.toBuilder().setSortOrder(newSortOrder).build()
-        }
+            } else {
+                if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
+                    SortOrder.BY_PRIORITY
+                } else {
+                    SortOrder.NONE
+                }
+            }
+        updateSortOrder(newSortOrder)
+        _sortOrderFlow.value = newSortOrder
     }
 
-    /**
-     * Enable / disable sort by priority.
-     */
     override suspend fun enableSortByPriority(enable: Boolean) {
-        // updateData handles data transactionally, ensuring that if the sort is updated at the same
-        // time from another thread, we won't have conflicts
-        userPreferencesStore.updateData { currentPreferences ->
-            val currentOrder = currentPreferences.sortOrder
-            val newSortOrder =
-                if (enable) {
-                    if (currentOrder == SortOrder.BY_DEADLINE) {
-                        SortOrder.BY_DEADLINE_AND_PRIORITY
-                    } else {
-                        SortOrder.BY_PRIORITY
-                    }
+        val currentOrder = sortOrderFlow.value
+        val newSortOrder =
+            if (enable) {
+                if (currentOrder == SortOrder.BY_DEADLINE) {
+                    SortOrder.BY_DEADLINE_AND_PRIORITY
                 } else {
-                    if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
-                        SortOrder.BY_DEADLINE
-                    } else {
-                        SortOrder.NONE
-                    }
+                    SortOrder.BY_PRIORITY
                 }
-            currentPreferences.toBuilder().setSortOrder(newSortOrder).build()
-        }
+            } else {
+                if (currentOrder == SortOrder.BY_DEADLINE_AND_PRIORITY) {
+                    SortOrder.BY_DEADLINE
+                } else {
+                    SortOrder.NONE
+                }
+            }
+        updateSortOrder(newSortOrder)
+        _sortOrderFlow.value = newSortOrder
     }
 
-    override suspend fun updateShowCompleted(completed: Boolean) {
-        userPreferencesStore.updateData { currentPreferences ->
-            currentPreferences.toBuilder().setShowCompleted(completed).build()
+    private fun updateSortOrder(sortOrder: SortOrder) {
+        sharedPreferences.edit {
+            putString(SORT_ORDER_KEY, sortOrder.name)
         }
     }
 }
