@@ -15,7 +15,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,20 +38,5 @@ object AppModule {
     @Singleton
     @Provides
     fun providesUserPreferencesRepository(@ApplicationContext context: Context) : UserPreferenceRepository = UserPreferencesRepositoryImpl(context)
-
-
-/*    @Singleton
-    @Provides
-    fun providesUserPreferencesRepository(datastore: DataStore<UserPreferences>) : UserPreferenceRepository = UserPreferencesRepositoryImpl(datastore)
-
-    @Singleton
-    @Provides
-    fun providesDataStore(@ApplicationContext appContext: Context): DataStore<UserPreferences> {
-        return DataStoreFactory.create(
-            serializer = UserPreferencesSerializer,
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME)},
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-        )
-    }*/
 
 }
