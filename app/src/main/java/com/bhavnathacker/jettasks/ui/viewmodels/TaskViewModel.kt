@@ -59,7 +59,6 @@ class TaskViewModel @Inject constructor(
         }
         // sort the tasks
         return when (sortOrder) {
-            SortOrder.UNSPECIFIED -> filteredTasks
             SortOrder.NONE -> filteredTasks
             SortOrder.BY_DEADLINE -> filteredTasks.sortedBy { it.deadline }
             SortOrder.BY_PRIORITY -> filteredTasks.sortedBy { it.priority.ordinal }

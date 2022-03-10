@@ -15,7 +15,6 @@ private const val USER_PREFERENCES_NAME = "user_preferences"
 private const val SORT_ORDER_KEY = "sort_order"
 
 enum class SortOrder {
-    UNSPECIFIED,
     NONE,
     BY_DEADLINE,
     BY_PRIORITY,
