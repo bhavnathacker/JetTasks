@@ -2,9 +2,10 @@ package com.bhavnathacker.jettasks.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.data.model.Task
 import com.bhavnathacker.jettasks.data.model.TaskStatus
-import com.bhavnathacker.jettasks.data.repository.SortOrder
+import com.bhavnathacker.jettasks.UserPreferences.SortOrder
 import com.bhavnathacker.jettasks.data.repository.TaskRepository
 import com.bhavnathacker.jettasks.data.repository.UserPreferenceRepository
 import com.bhavnathacker.jettasks.ui.model.TasksUiModel
@@ -19,24 +20,22 @@ class TaskViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferenceRepository
 ) : ViewModel() {
 
-    private val sortOrderFlow = userPreferencesRepository.sortOrderFlow
-    private val showCompletedFlow = MutableStateFlow(false)
+    private val userPreferencesFlow = userPreferencesRepository.userPreferencesFlow
 
     // Every time the sort order, the show completed filter or the list of tasks emit,
     // we should recreate the list of tasks
     private val tasksUiModelFlow = combine(
         taskRepository.getAllTasks(),
-        sortOrderFlow,
-        showCompletedFlow
-    ) { tasks: List<Task>, sortOrder: SortOrder, showCompleted: Boolean ->
+        userPreferencesFlow
+    ) { tasks: List<Task>, userPreferences: UserPreferences ->
         return@combine TasksUiModel(
             tasks = filterSortTasks(
                 tasks,
-                showCompleted,
-                sortOrder
+                userPreferences.showCompleted,
+                userPreferences.sortOrder
             ),
-            showCompleted = showCompleted,
-            sortOrder = sortOrder
+            showCompleted = userPreferences.showCompleted,
+            sortOrder = userPreferences.sortOrder
         )
     }
 
@@ -59,6 +58,7 @@ class TaskViewModel @Inject constructor(
         }
         // sort the tasks
         return when (sortOrder) {
+            SortOrder.UNSPECIFIED -> filteredTasks
             SortOrder.NONE -> filteredTasks
             SortOrder.BY_DEADLINE -> filteredTasks.sortedBy { it.deadline }
             SortOrder.BY_PRIORITY -> filteredTasks.sortedBy { it.priority.ordinal }
@@ -71,7 +71,9 @@ class TaskViewModel @Inject constructor(
     }
 
     fun showCompletedTasks(show: Boolean) {
-        showCompletedFlow.value = show
+        viewModelScope.launch {
+                    userPreferencesRepository.updateShowCompleted(show)
+                }
     }
 
     fun onSortByDeadlineChanged(enable: Boolean) {

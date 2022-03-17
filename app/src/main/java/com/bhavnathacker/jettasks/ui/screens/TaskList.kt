@@ -19,7 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.bhavnathacker.jettasks.R
 import com.bhavnathacker.jettasks.data.model.Task
-import com.bhavnathacker.jettasks.data.repository.SortOrder
+import com.bhavnathacker.jettasks.UserPreferences.SortOrder
 import com.bhavnathacker.jettasks.ui.components.TaskChip
 import com.bhavnathacker.jettasks.ui.model.TasksUiModel
 import com.bhavnathacker.jettasks.util.*
