@@ -1,9 +1,9 @@
-package com.bhavnathacker.jettasks.ui.model
+package com.bhavnathacker.jettasks.ui.states
 
 import com.bhavnathacker.jettasks.UserPreferences.SortOrder
-import com.bhavnathacker.jettasks.data.model.Task
+import com.bhavnathacker.jettasks.domain.model.Task
 
-data class TasksUiModel(
+data class TaskUiModel(
     val tasks: List<Task>,
     val showCompleted: Boolean,
     val sortOrder: SortOrder

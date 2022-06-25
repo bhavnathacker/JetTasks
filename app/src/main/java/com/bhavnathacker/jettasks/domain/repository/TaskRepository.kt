@@ -1,11 +1,11 @@
-package com.bhavnathacker.jettasks.data.repository
+package com.bhavnathacker.jettasks.domain.repository
 
-import com.bhavnathacker.jettasks.data.model.Task
+import com.bhavnathacker.jettasks.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
 interface TaskRepository {
     suspend fun saveTask(task: Task)
     suspend fun deleteTask(task: Task)
-    suspend fun deleteAllTasks()
+    suspend fun getTask(id: Int?): Task?
     fun getAllTasks(): Flow<List<Task>>
 }

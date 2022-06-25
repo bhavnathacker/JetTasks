@@ -1,4 +1,4 @@
-package com.bhavnathacker.jettasks.data.repository
+package com.bhavnathacker.jettasks.domain.repository
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

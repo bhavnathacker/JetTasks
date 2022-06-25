@@ -1,4 +1,4 @@
-package com.bhavnathacker.jettasks.data.repository
+package com.bhavnathacker.jettasks.domain.repository
 
 import com.bhavnathacker.jettasks.UserPreferences
 import kotlinx.coroutines.flow.Flow

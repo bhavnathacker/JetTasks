@@ -13,27 +13,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.bhavnathacker.jettasks.R
-import com.bhavnathacker.jettasks.data.model.Task
-import com.bhavnathacker.jettasks.data.model.TaskPriority
-import com.bhavnathacker.jettasks.data.model.TaskStatus
+import com.bhavnathacker.jettasks.domain.model.TaskPriority
+import com.bhavnathacker.jettasks.domain.model.TaskStatus
 import com.bhavnathacker.jettasks.ui.components.*
+import com.bhavnathacker.jettasks.ui.events.TaskDetailEvent
+import com.bhavnathacker.jettasks.ui.viewmodels.TaskDetailViewModel
 import com.bhavnathacker.jettasks.util.getDateWithoutTime
-import java.util.*
 
 @ExperimentalComposeUiApi
 @Composable
-fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
+fun TaskDetail(navController: NavController, taskId: Int?, viewModel: TaskDetailViewModel = hiltViewModel()) {
     val context = LocalContext.current
-    val defaultDate = Date(Calendar.getInstance().timeInMillis)
 
-    var name by remember { mutableStateOf(task?.name ?: "") }
-    var selectedDate: Date by remember { mutableStateOf(task?.deadline ?: defaultDate) }
+    taskId?.let {
+        LaunchedEffect(key1 = taskId) {
+            viewModel.fetchTask(taskId)
+        }
+    }
+
+    val task = viewModel.taskState.value
+
+    val name = task.name
+    val selectedDate = task.deadline
+    val status = task.status
     var priorityExpanded by remember { mutableStateOf(false) }
-
-    val defaultPriorityIndex = TaskPriority.values().indexOf(task?.priority)
-    var selectedPriorityIndex by remember { mutableStateOf(if (defaultPriorityIndex != -1) defaultPriorityIndex else 0) }
-    var status by remember { mutableStateOf(task?.status ?: TaskStatus.PENDING) }
+    val defaultPriorityIndex = TaskPriority.values().indexOf(task.priority)
+    var selectedPriorityIndex = if (defaultPriorityIndex != -1) defaultPriorityIndex else 0
 
     Column {
         TopAppBar(title = {
@@ -55,7 +63,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                 TaskInputText(
                     text = name,
                     label = stringResource(R.string.label_add_task),
-                    onTextChange = { name = it })
+                    onTextChange = { viewModel.onEvent(TaskDetailEvent.ChangeName(it)) })
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -65,7 +73,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                 color = MaterialTheme.colors.onBackground
             )
             TaskDatePicker(selectedDate) { date ->
-                selectedDate = date
+                viewModel.onEvent(TaskDetailEvent.ChangeDeadline(date.getDateWithoutTime()))
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -92,6 +100,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                     onMenuItemClick = { index ->
                         selectedPriorityIndex = index
                         priorityExpanded = false
+                        viewModel.onEvent(TaskDetailEvent.ChangePriority(TaskPriority.values()[selectedPriorityIndex]))
                     }
                 )
             }
@@ -102,8 +111,7 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                 stringResource(id = R.string.completed),
                 status == TaskStatus.COMPLETED,
                 onCheckChanged = { isChecked ->
-                    status =
-                        if (isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING
+                    viewModel.onEvent(TaskDetailEvent.ChangeStatus( if (isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING))
                 })
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -116,33 +124,20 @@ fun TaskDetail(task: Task?, onSaveTask: (Task) -> Unit) {
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp),
                 onClick = {
-                    var toastMessage: String
-                    if (name.isNotEmpty()) {
-                        if (task != null) {
-                            //Update Task
-                            task.name = name
-                            task.deadline = selectedDate.getDateWithoutTime()
-                            task.priority = TaskPriority.values()[selectedPriorityIndex]
-                            task.status = status
-                            toastMessage = taskUpdatedMsg
-                            onSaveTask(task)
+                    val toastMessage: String
+                    if (task.name.isNotEmpty()) {
+                        toastMessage = if (task.id != 0) {
+                            taskUpdatedMsg
                         } else {
-                            //Add Task
-                            val newTask = Task(
-                                name = name,
-                                deadline = selectedDate.getDateWithoutTime(),
-                                priority = TaskPriority.values()[selectedPriorityIndex],
-                                status = status
-                            )
-                            toastMessage = taskAddedMsg
-                            onSaveTask(newTask)
+                            taskAddedMsg
                         }
+                        viewModel.onEvent(TaskDetailEvent.SaveTask)
+                        navController.navigateUp()
                     } else {
                         toastMessage = addTaskMsg
                     }
                     Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                 })
-
         }
 
     }

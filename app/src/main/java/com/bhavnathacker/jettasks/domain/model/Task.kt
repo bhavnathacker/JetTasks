@@ -1,4 +1,4 @@
-package com.bhavnathacker.jettasks.data.model
+package com.bhavnathacker.jettasks.domain.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
@@ -8,30 +8,6 @@ import com.bhavnathacker.jettasks.ui.theme.Green500
 import com.bhavnathacker.jettasks.ui.theme.Orange500
 import com.bhavnathacker.jettasks.ui.theme.Red500
 import java.util.*
-
-enum class TaskPriority {
-    HIGH, MEDIUM, LOW;
-
-    companion object {
-        fun getList(): List<String> {
-            return values().map {
-                it.name
-            }
-        }
-    }
-}
-
-enum class TaskStatus {
-    PENDING, COMPLETED;
-
-    companion object {
-        fun getList(): List<String> {
-            return values().map {
-                it.name
-            }
-        }
-    }
-}
 
 @Entity(tableName = "task_tbl")
 data class Task(

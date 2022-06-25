@@ -17,27 +17,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.bhavnathacker.jettasks.R
 import com.bhavnathacker.jettasks.UserPreferences
-import com.bhavnathacker.jettasks.data.model.Task
+import com.bhavnathacker.jettasks.domain.model.Task
 import com.bhavnathacker.jettasks.ui.components.TaskChip
-import com.bhavnathacker.jettasks.ui.model.TasksUiModel
+import com.bhavnathacker.jettasks.ui.events.TaskListEvent
+import com.bhavnathacker.jettasks.ui.navigation.TaskScreens
+import com.bhavnathacker.jettasks.ui.viewmodels.TaskListViewModel
 import com.bhavnathacker.jettasks.util.*
 
 @ExperimentalComposeUiApi
 @Composable
 fun TaskList(
-    tasksUiModel: TasksUiModel,
-    onViewTask: (Task) -> Unit,
-    onDeleteTask: (Task) -> Unit,
-    onAddTask: () -> Unit,
-    showCompletedTasks: (Boolean) -> Unit,
-    onSortByPriorityChanged: (Boolean) -> Unit,
-    onSortByDeadlineChanged:  (Boolean) -> Unit
+    navController: NavController,
+    viewModel: TaskListViewModel = hiltViewModel()
 ) {
-    val tasks = tasksUiModel.tasks
-    val showCompleted = tasksUiModel.showCompleted
-    val sortOrder = tasksUiModel.sortOrder
+    val taskUiState = viewModel.tasksUiModelStateFlow.collectAsState().value
+    val tasks = taskUiState.tasks
+    val showCompleted = taskUiState.showCompleted
+    val sortOrder = taskUiState.sortOrder
 
     val isPrioritySortSelected =
         sortOrder == UserPreferences.SortOrder.BY_PRIORITY || sortOrder == UserPreferences.SortOrder.BY_DEADLINE_AND_PRIORITY
@@ -48,7 +48,6 @@ fun TaskList(
         TopAppBar(title = {
             Text(text = stringResource(id = R.string.app_name))
         }, backgroundColor = MaterialTheme.colors.primary)
-
 
         ConstraintLayout(
             modifier = Modifier
@@ -67,8 +66,8 @@ fun TaskList(
                 }) {
                 items(tasks) { task ->
                     TaskRow(task = task,
-                        onViewTask = { onViewTask(it) },
-                        onDeleteTask = { onDeleteTask(it) })
+                        onViewTask = { navController.navigate(TaskScreens.DetailScreen.name + "/${it.id}") },
+                        onDeleteTask = { viewModel.onEvent(TaskListEvent.DeleteTask(it)) })
                 }
             }
 
@@ -104,7 +103,7 @@ fun TaskList(
                             Text(text = stringResource(R.string.show_completed_tasks))
                             Switch(
                                 checked = showCompleted,
-                                onCheckedChange = { showCompletedTasks(it) },
+                                onCheckedChange = { viewModel.onEvent(TaskListEvent.ShowCompletedTasks(it)) },
                                 colors = SwitchDefaults.colors(
                                     checkedThumbColor = MaterialTheme.colors.secondary,
                                     uncheckedThumbColor = MaterialTheme.colors.onBackground.copy(0.5f),
@@ -118,24 +117,21 @@ fun TaskList(
                             TaskChip(
                                 name = stringResource(id = R.string.priority),
                                 isSelected = isPrioritySortSelected,
-                                onSelectionChanged = { onSortByPriorityChanged(it)})
+                                onSelectionChanged = { viewModel.onEvent(TaskListEvent.ChangeSortByPriority(it))})
                             TaskChip(
                                 name = stringResource(id = R.string.deadline),
                                 isSelected = isDeadlineSortSelected,
-                                onSelectionChanged = { onSortByDeadlineChanged(it)})
+                                onSelectionChanged = { viewModel.onEvent(TaskListEvent.ChangeSortByDeadline(it))})
                         }
                     }
                     FloatingActionButton(
                         modifier = Modifier
-                            .padding(8.dp), onClick = onAddTask
+                            .padding(8.dp), onClick = { navController.navigate(TaskScreens.DetailScreen.name + "/-1") }
                     ) {
                         Icon(Icons.Filled.Add, stringResource(R.string.add_task))
                     }
                 }
-
             }
-
-
         }
     }
 }
@@ -148,7 +144,6 @@ fun TaskRow(
     onViewTask: (Task) -> Unit,
     onDeleteTask: (Task) -> Unit
 ) {
-
     Card(
         modifier
             .fillMaxWidth()
@@ -188,15 +183,12 @@ fun TaskRow(
                         color = task.contentColor
                     )
                 }
-
             }
-
             Icon(imageVector = Icons.Default.Delete, tint = task.contentColor,
                 contentDescription = stringResource(R.string.delete_task),
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .clickable { onDeleteTask(task) })
-
         }
     }
 }
