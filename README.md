@@ -54,7 +54,14 @@ com.bhavnathacker.jettasks
 ├── data                  # DATA LAYER
 │   ├── local             # Local Persistence (Room) Database
 │   │   ├── TaskDao          # Data Access Object for Room
-│   │   └── TaskDatabase     # Database Instance
+│   │   └── TaskDatabase     # Database Instance      
+│   └── repository        # All Repositories implemetations
+│       └── TaskRepositoryImpl             # Task Repo linked to Room
+│       └── UserPreferencesRepositoryImpl   # User Preference Repo linked to DataStoree
+├── domain                  # DOMAIN LAYER
+│   ├── use_cases             # Use cases to interact with Repositories
+│   │   ├── TaskUseCases          #  To interact with Task Repository
+│   │   └── UserPreferenceUseCases     # To interact with User Preference Repository
 │   └── model             # Model Classes
 │   │   └── Task         
 │   │   └── TaskStatus     
@@ -66,11 +73,12 @@ com.bhavnathacker.jettasks
 ├── di                    # DI LAYER (Hilt DI Module)
 ├── ui                    # UI LAYER
 │   ├── components            # Reusable UI components
-│   ├── model                 # TaskUiModel
+│   ├── events                # Events from Screens
 │   ├── navigation            # Navigation Routes & Navigation Graph
+│   ├── states                # States for Screen (e.g. TaskUiModel)
 │   ├── screens               # Task List and Detail Screens
 │   ├── theme                 # Theme setup
-│   ├── viewmodels            # TaskViewModel
+│   ├── viewmodels            # TaskListViewModel, TaskDetailViewModel
 ├── util                  # Extension functions
 ├── MainActivity.kt       # MainActivity 
 ├── TaskApplication       # Application class
