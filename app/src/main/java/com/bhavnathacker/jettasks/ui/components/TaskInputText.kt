@@ -10,6 +10,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 
 
@@ -19,6 +20,7 @@ fun TaskInputText(
     modifier: Modifier = Modifier,
     text: String,
     label: String,
+    testTag: String = "",
     maxLine: Int = 1,
     onTextChange: (String) -> Unit,
     onImeAction: () -> Unit = {}
@@ -41,7 +43,7 @@ fun TaskInputText(
             keyboardController?.hide()
 
         }),
-        modifier = modifier
+        modifier = modifier.testTag(testTag)
     )
 
 }

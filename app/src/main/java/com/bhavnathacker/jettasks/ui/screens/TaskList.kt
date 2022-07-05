@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -109,7 +110,7 @@ fun TaskList(
                                     uncheckedThumbColor = MaterialTheme.colors.onBackground.copy(0.5f),
                                     checkedTrackColor = MaterialTheme.colors.secondary.copy(0.5f),
                                     uncheckedTrackColor = MaterialTheme.colors.secondary.copy(0.5f)
-                                ),)
+                                ), modifier = Modifier.testTag(TestTags.SHOW_COMPLETED_SWITCH))
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {

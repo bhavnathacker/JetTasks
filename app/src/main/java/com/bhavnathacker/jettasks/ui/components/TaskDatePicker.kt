@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -27,6 +28,7 @@ import java.util.*
 @Composable
 fun TaskDatePicker(
     selectedDate: Date,
+    testTag: String = "",
     onDateSelected: (Date) -> Unit
 ) {
     val activity = LocalContext.current as ComponentActivity
@@ -38,7 +40,7 @@ fun TaskDatePicker(
             .border(0.5.dp, MaterialTheme.colors.onBackground.copy(alpha = 0.5f))
             .clickable {
                 showDatePicker(activity, onDateSelected)
-            }
+            }.testTag(testTag)
     ) {
 
         ConstraintLayout(

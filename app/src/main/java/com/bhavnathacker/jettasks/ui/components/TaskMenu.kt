@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ fun TaskMenu(
     menuItems: List<String>,
     menuExpandedState: Boolean,
     selectedIndex: Int,
+    testTag: String = "",
     updateMenuExpandStatus: () -> Unit,
     onDismissMenuView: () -> Unit,
     onMenuItemClick: (Int) -> Unit,
@@ -35,7 +37,7 @@ fun TaskMenu(
                 onClick = {
                     updateMenuExpandStatus()
                 },
-            ),
+            ).testTag(testTag),
 
         ) {
 

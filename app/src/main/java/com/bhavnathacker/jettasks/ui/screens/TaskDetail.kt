@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,6 +22,7 @@ import com.bhavnathacker.jettasks.domain.model.TaskStatus
 import com.bhavnathacker.jettasks.ui.components.*
 import com.bhavnathacker.jettasks.ui.events.TaskDetailEvent
 import com.bhavnathacker.jettasks.ui.viewmodels.TaskDetailViewModel
+import com.bhavnathacker.jettasks.util.TestTags
 import com.bhavnathacker.jettasks.util.getDateWithoutTime
 
 @ExperimentalComposeUiApi
@@ -63,6 +65,7 @@ fun TaskDetail(navController: NavController, taskId: Int?, viewModel: TaskDetail
                 TaskInputText(
                     text = name,
                     label = stringResource(R.string.label_add_task),
+                    testTag = TestTags.TASK_NAME,
                     onTextChange = { viewModel.onEvent(TaskDetailEvent.ChangeName(it)) })
             }
 
@@ -72,7 +75,8 @@ fun TaskDetail(navController: NavController, taskId: Int?, viewModel: TaskDetail
                 text = stringResource(R.string.task_deadline),
                 color = MaterialTheme.colors.onBackground
             )
-            TaskDatePicker(selectedDate) { date ->
+            TaskDatePicker(selectedDate,
+                testTag = TestTags.TASK_DEADLINE) { date ->
                 viewModel.onEvent(TaskDetailEvent.ChangeDeadline(date.getDateWithoutTime()))
             }
 
@@ -91,6 +95,7 @@ fun TaskDetail(navController: NavController, taskId: Int?, viewModel: TaskDetail
                     menuItems = TaskPriority.getList(),
                     menuExpandedState = priorityExpanded,
                     selectedIndex = selectedPriorityIndex,
+                    testTag = TestTags.TASK_PRIORITY,
                     updateMenuExpandStatus = {
                         priorityExpanded = true
                     },
@@ -110,6 +115,7 @@ fun TaskDetail(navController: NavController, taskId: Int?, viewModel: TaskDetail
             TaskSwitch(
                 stringResource(id = R.string.completed),
                 status == TaskStatus.COMPLETED,
+                testTag = TestTags.TASK_STATUS,
                 onCheckChanged = { isChecked ->
                     viewModel.onEvent(TaskDetailEvent.ChangeStatus( if (isChecked) TaskStatus.COMPLETED else TaskStatus.PENDING))
                 })

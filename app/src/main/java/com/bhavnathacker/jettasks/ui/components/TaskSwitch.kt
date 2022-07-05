@@ -6,13 +6,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
 
 @Composable
-fun TaskSwitch(text: String, isChecked: Boolean, onCheckChanged: (Boolean) -> Unit) {
+fun TaskSwitch(text: String, isChecked: Boolean, testTag: String = "", onCheckChanged: (Boolean) -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +50,7 @@ fun TaskSwitch(text: String, isChecked: Boolean, onCheckChanged: (Boolean) -> Un
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                }
+                }.testTag(testTag)
         )
     }
 
