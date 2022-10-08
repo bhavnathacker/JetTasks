@@ -3,10 +3,10 @@ package com.bhavnathacker.jettasks.domain.model
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bhavnathacker.jettasks.ui.theme.Amber500
-import com.bhavnathacker.jettasks.ui.theme.Green500
-import com.bhavnathacker.jettasks.ui.theme.Orange500
-import com.bhavnathacker.jettasks.ui.theme.Red500
+import com.bhavnathacker.jettasks.presentation.theme.Amber500
+import com.bhavnathacker.jettasks.presentation.theme.Green500
+import com.bhavnathacker.jettasks.presentation.theme.Orange500
+import com.bhavnathacker.jettasks.presentation.theme.Red500
 import java.util.*
 
 @Entity(tableName = "task_tbl")

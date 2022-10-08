@@ -8,27 +8,33 @@ import androidx.room.Room
 import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.data.local.TaskDao
 import com.bhavnathacker.jettasks.data.local.TaskDatabase
-import com.bhavnathacker.jettasks.data.repository.TaskRepositoryImpl
-import com.bhavnathacker.jettasks.data.repository.UserPreferencesRepositoryImpl
+import com.bhavnathacker.jettasks.data.repository.DefaultTaskRepository
+import com.bhavnathacker.jettasks.data.repository.DefaultUserPreferencesRepository
 import com.bhavnathacker.jettasks.domain.repository.TaskRepository
 import com.bhavnathacker.jettasks.domain.repository.UserPreferenceRepository
 import com.bhavnathacker.jettasks.domain.repository.UserPreferencesSerializer
 import com.bhavnathacker.jettasks.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import dagger.hilt.testing.TestInstallIn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import javax.inject.Singleton
 
-private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Module
-@InstallIn(SingletonComponent::class)
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [DataModule::class, PreferencesModule::class, PreferencesUseCasesModule::class, RepositoryModule::class, TaskUseCasesModule::class]
+)
 object TestAppModule {
+
+    private const val TEST_DATA_STORE_FILE_NAME = "test_user_prefs.pb"
+
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): TaskDatabase =
@@ -44,43 +50,55 @@ object TestAppModule {
 
     @Singleton
     @Provides
-    fun providesTaskRepository(taskDao: TaskDao): TaskRepository = TaskRepositoryImpl(taskDao)
+    fun providesTaskRepository(taskDao: TaskDao): TaskRepository = DefaultTaskRepository(taskDao)
 
     @Singleton
     @Provides
     fun providesUserPreferencesRepository(datastore: DataStore<UserPreferences>): UserPreferenceRepository =
-        UserPreferencesRepositoryImpl(datastore)
+        DefaultUserPreferencesRepository(datastore)
 
     @Singleton
     @Provides
     fun providesDataStore(@ApplicationContext appContext: Context): DataStore<UserPreferences> {
         return DataStoreFactory.create(
             serializer = UserPreferencesSerializer,
-            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+            produceFile = { appContext.dataStoreFile(TEST_DATA_STORE_FILE_NAME) },
+            scope = TestScope(UnconfinedTestDispatcher())
         )
     }
 
     @Singleton
     @Provides
-    fun provideTaskUseCases(repository: TaskRepository): TaskUseCases {
-        return TaskUseCases(
-            getTask = GetTask(repository),
-            getTasks = GetTasks(repository),
-            saveTask = SaveTask(repository),
-            deleteTask = DeleteTask(repository)
-        )
-    }
+    fun provideGetTask(repository: TaskRepository): GetTask = DefaultGetTask(repository)
 
     @Singleton
     @Provides
-    fun provideUserPreferenceUseCases(repository: UserPreferenceRepository): UserPreferenceUseCases {
-        return UserPreferenceUseCases(
-            getUserPreferences = GetUserPreferences(repository),
-            updateShowCompleted = UpdateShowCompleted(repository),
-            enableSortByDeadline = EnableSortByDeadline(repository),
-            enableSortByPriority = EnableSortByPriority(repository)
-        )
-    }
+    fun provideGetTasks(repository: TaskRepository): GetTasks = DefaultGetTasks(repository)
+
+
+    @Singleton
+    @Provides
+    fun provideSaveTask(repository: TaskRepository): SaveTask = DefaultSaveTask(repository)
+
+
+    @Singleton
+    @Provides
+    fun provideDeleteTask(repository: TaskRepository): DeleteTask = DefaultDeleteTask(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetUserPreferences(repository: UserPreferenceRepository): GetUserPreferences = DefaultGetUserPreferences(repository)
+
+    @Singleton
+    @Provides
+    fun provideEnableSortByPriority(repository: UserPreferenceRepository): EnableSortByPriority = DefaultEnableSortByPriority(repository)
+
+    @Singleton
+    @Provides
+    fun provideEnableSortByDeadline(repository: UserPreferenceRepository): EnableSortByDeadline = DefaultEnableSortByDeadline(repository)
+
+    @Singleton
+    @Provides
+    fun provideUpdateShowCompleted(repository: UserPreferenceRepository): UpdateShowCompleted = DefaultUpdateShowCompleted(repository)
 
 }
