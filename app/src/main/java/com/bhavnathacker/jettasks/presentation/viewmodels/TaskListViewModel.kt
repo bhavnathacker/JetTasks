@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bhavnathacker.jettasks.UserPreferences
 import com.bhavnathacker.jettasks.UserPreferences.SortOrder
-import com.bhavnathacker.jettasks.domain.model.Task
-import com.bhavnathacker.jettasks.domain.model.TaskStatus
+import com.bhavnathacker.jettasks.domain.entity.Task
+import com.bhavnathacker.jettasks.domain.entity.TaskStatus
 import com.bhavnathacker.jettasks.domain.use_cases.*
 import com.bhavnathacker.jettasks.presentation.events.TaskListEvent
 import com.bhavnathacker.jettasks.presentation.states.TaskUiModel

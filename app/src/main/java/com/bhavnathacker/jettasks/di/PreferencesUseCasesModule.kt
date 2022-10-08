@@ -1,15 +1,11 @@
 package com.bhavnathacker.jettasks.di
 
-import com.bhavnathacker.jettasks.UserPreferences
-import com.bhavnathacker.jettasks.data.local.TaskDao
-import com.bhavnathacker.jettasks.data.local.TaskDatabase
 import com.bhavnathacker.jettasks.domain.repository.UserPreferenceRepository
 import com.bhavnathacker.jettasks.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 @Module

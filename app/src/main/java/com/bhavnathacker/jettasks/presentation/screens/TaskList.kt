@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bhavnathacker.jettasks.R
 import com.bhavnathacker.jettasks.UserPreferences
-import com.bhavnathacker.jettasks.domain.model.Task
+import com.bhavnathacker.jettasks.domain.entity.Task
 import com.bhavnathacker.jettasks.presentation.components.TaskChip
 import com.bhavnathacker.jettasks.presentation.events.TaskListEvent
 import com.bhavnathacker.jettasks.presentation.navigation.TaskScreens

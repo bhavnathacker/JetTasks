@@ -6,8 +6,12 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import androidx.room.Room
 import com.bhavnathacker.jettasks.UserPreferences
-import com.bhavnathacker.jettasks.data.local.TaskDao
-import com.bhavnathacker.jettasks.data.local.TaskDatabase
+import com.bhavnathacker.jettasks.data.dao.TaskDao
+import com.bhavnathacker.jettasks.data.database.TaskDatabase
+import com.bhavnathacker.jettasks.data.mapper.DBTaskMapper
+import com.bhavnathacker.jettasks.data.mapper.TaskMapper
+import com.bhavnathacker.jettasks.data.mapper.toDBTask
+import com.bhavnathacker.jettasks.data.mapper.toTask
 import com.bhavnathacker.jettasks.data.repository.DefaultTaskRepository
 import com.bhavnathacker.jettasks.data.repository.DefaultUserPreferencesRepository
 import com.bhavnathacker.jettasks.domain.repository.TaskRepository
@@ -100,5 +104,4 @@ object TestAppModule {
     @Singleton
     @Provides
     fun provideUpdateShowCompleted(repository: UserPreferenceRepository): UpdateShowCompleted = DefaultUpdateShowCompleted(repository)
-
 }

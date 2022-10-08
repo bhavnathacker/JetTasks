@@ -1,23 +1,23 @@
-package com.bhavnathacker.jettasks.data.local
+package com.bhavnathacker.jettasks.data.dao
 
 import androidx.room.*
-import com.bhavnathacker.jettasks.domain.model.Task
+import com.bhavnathacker.jettasks.data.model.DBTask
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM task_tbl ORDER BY id DESC")
-    fun getTasks(): Flow<List<Task>>
+    fun getTasks(): Flow<List<DBTask>>
 
     @Query("SELECT * FROM task_tbl where id = :id")
-    suspend fun getTask(id: Int?): Task?
+    suspend fun getTask(id: Int?): DBTask?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(task: Task)
+    suspend fun insert(task: DBTask)
 
     @Query("DELETE FROM task_tbl")
     suspend fun deleteAll()
 
     @Delete
-    suspend fun deleteTask(task: Task)
+    suspend fun deleteTask(task: DBTask)
 }

@@ -1,6 +1,6 @@
 package com.bhavnathacker.jettasks.data.repository
 
-import com.bhavnathacker.jettasks.domain.model.Task
+import com.bhavnathacker.jettasks.domain.entity.Task
 import com.bhavnathacker.jettasks.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

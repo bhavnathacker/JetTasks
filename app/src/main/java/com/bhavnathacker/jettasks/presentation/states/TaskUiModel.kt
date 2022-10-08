@@ -1,7 +1,7 @@
 package com.bhavnathacker.jettasks.presentation.states
 
 import com.bhavnathacker.jettasks.UserPreferences.SortOrder
-import com.bhavnathacker.jettasks.domain.model.Task
+import com.bhavnathacker.jettasks.domain.entity.Task
 
 data class TaskUiModel(
     val tasks: List<Task>,

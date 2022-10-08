@@ -4,10 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bhavnathacker.jettasks.domain.model.Task
-import com.bhavnathacker.jettasks.domain.model.TaskPriority
-import com.bhavnathacker.jettasks.domain.model.TaskStatus
-import com.bhavnathacker.jettasks.domain.use_cases.DefaultSaveTask
+import com.bhavnathacker.jettasks.domain.entity.Task
+import com.bhavnathacker.jettasks.domain.entity.TaskPriority
+import com.bhavnathacker.jettasks.domain.entity.TaskStatus
 import com.bhavnathacker.jettasks.domain.use_cases.GetTask
 import com.bhavnathacker.jettasks.domain.use_cases.SaveTask
 import com.bhavnathacker.jettasks.presentation.events.TaskDetailEvent

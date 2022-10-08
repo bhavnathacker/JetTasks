@@ -1,6 +1,6 @@
 package com.bhavnathacker.jettasks.presentation.events
 
-import com.bhavnathacker.jettasks.domain.model.Task
+import com.bhavnathacker.jettasks.domain.entity.Task
 
 sealed class TaskListEvent {
     data class DeleteTask(val task: Task): TaskListEvent()

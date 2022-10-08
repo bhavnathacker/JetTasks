@@ -2,8 +2,8 @@ package com.bhavnathacker.jettasks.di
 
 import android.content.Context
 import androidx.room.Room
-import com.bhavnathacker.jettasks.data.local.TaskDao
-import com.bhavnathacker.jettasks.data.local.TaskDatabase
+import com.bhavnathacker.jettasks.data.dao.TaskDao
+import com.bhavnathacker.jettasks.data.database.TaskDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

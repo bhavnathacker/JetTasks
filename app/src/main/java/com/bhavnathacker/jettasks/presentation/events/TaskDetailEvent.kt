@@ -1,7 +1,7 @@
 package com.bhavnathacker.jettasks.presentation.events
 
-import com.bhavnathacker.jettasks.domain.model.TaskPriority
-import com.bhavnathacker.jettasks.domain.model.TaskStatus
+import com.bhavnathacker.jettasks.domain.entity.TaskPriority
+import com.bhavnathacker.jettasks.domain.entity.TaskStatus
 import java.util.*
 
 sealed class TaskDetailEvent {

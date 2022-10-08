@@ -1,9 +1,9 @@
 package com.bhavnathacker.jettasks.domain.use_cases
 
 import com.bhavnathacker.jettasks.data.repository.FakeTaskRepository
-import com.bhavnathacker.jettasks.domain.model.Task
-import com.bhavnathacker.jettasks.domain.model.TaskPriority
-import com.bhavnathacker.jettasks.domain.model.TaskStatus
+import com.bhavnathacker.jettasks.domain.entity.Task
+import com.bhavnathacker.jettasks.domain.entity.TaskPriority
+import com.bhavnathacker.jettasks.domain.entity.TaskStatus
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.Before

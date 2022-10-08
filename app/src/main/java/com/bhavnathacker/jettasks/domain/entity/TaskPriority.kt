@@ -1,7 +1,7 @@
-package com.bhavnathacker.jettasks.domain.model
+package com.bhavnathacker.jettasks.domain.entity
 
-enum class TaskStatus {
-    PENDING, COMPLETED;
+enum class TaskPriority {
+    HIGH, MEDIUM, LOW;
 
     companion object {
         fun getList(): List<String> {

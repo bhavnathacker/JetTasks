@@ -119,6 +119,8 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
     androidTestImplementation "io.mockk:mockk-android:1.10.5"
     androidTestImplementation 'androidx.test:runner:1.4.0'
+
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
 }
 
 protobuf {

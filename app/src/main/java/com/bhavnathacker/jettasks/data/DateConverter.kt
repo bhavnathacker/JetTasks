@@ -1,4 +1,4 @@
-package com.bhavnathacker.jettasks.data.local
+package com.bhavnathacker.jettasks.data
 
 import androidx.room.TypeConverter
 import java.util.*

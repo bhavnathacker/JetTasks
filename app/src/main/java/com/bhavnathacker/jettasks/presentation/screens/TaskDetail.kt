@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bhavnathacker.jettasks.R
-import com.bhavnathacker.jettasks.domain.model.TaskPriority
-import com.bhavnathacker.jettasks.domain.model.TaskStatus
+import com.bhavnathacker.jettasks.domain.entity.TaskPriority
+import com.bhavnathacker.jettasks.domain.entity.TaskStatus
 import com.bhavnathacker.jettasks.presentation.components.*
 import com.bhavnathacker.jettasks.presentation.events.TaskDetailEvent
 import com.bhavnathacker.jettasks.presentation.viewmodels.TaskDetailViewModel

@@ -1,18 +1,14 @@
-package com.bhavnathacker.jettasks.domain.model
+package com.bhavnathacker.jettasks.domain.entity
 
 import androidx.compose.ui.graphics.Color
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.bhavnathacker.jettasks.presentation.theme.Amber500
 import com.bhavnathacker.jettasks.presentation.theme.Green500
 import com.bhavnathacker.jettasks.presentation.theme.Orange500
 import com.bhavnathacker.jettasks.presentation.theme.Red500
-import java.util.*
+import java.util.Date
 
-@Entity(tableName = "task_tbl")
 data class Task(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Int,
     var name: String,
     var deadline: Date,
     var priority: TaskPriority,
