@@ -5,7 +5,7 @@ option java_multiple_files = true;
 
 message UserPreferences {
   // filter for showing / hiding completed tasks
-  //test 2
+  //release
   bool show_completed = 1;
 
   // defines tasks sorting order: no order, by deadline, by priority, by deadline and priority
